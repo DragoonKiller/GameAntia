@@ -49,11 +49,11 @@ There are multiple samples written in different programming languages. To use th
 
 ### Scores
 
-We will run `10` times of game with your AI and 4 of our AIs (may **not** be given samples).
+We will run `10` times of game with your AI and 4 of our AIs (which may **not** be any of given samples).
 
 1. You get **at least** 30 scores if your AI works properly, just like samples.
 2. You get **at least** 60 points if your AI live for at least 200 rounds every game.
-3. You get **at least** 100 scores if your AI win at least `1` times.
+3. You get **at least** 100 scores if your AI win at least `2` times.
 4. You get **at least** 160 scores if your AI win at least `5` times.
 5. You get full 200 scores if your AI win at least `8` times.
 
@@ -61,13 +61,14 @@ You may get more scores even if you haven't complete requirements described abov
 We will go deep into your code to find out what strategy your AI use, and how famillar you are with the programming language you use.
 
 ### Hints
-1. To run the game, you may need an installation of **.Net Core**, **Mono** or **.Net Framework**. **It's recommanded to install Mono on Linux and macOS, and .Net Core on Windows**. This is not a simple work, check everything carefully.
-2. Check `log.txt` if you get something wrong with the game or with your AI. Invalid commands will be reported out there.
-3. You can refer given samples' source code to investigate how to interact with the game program.
-4. Feel free to use any programming language and its compiler and build system.
-5. Your program should exit normally **in `0.2` seconds**. Program will be killed if time limit exceeded.
-6. You may need to `flush` the stdout when you have done your output. Search `stdout flush` for more information.
+1. To run the game, you may need an installation of **.Net Core**, **Mono** or **.Net Framework**. **It's recommanded to install Mono on Linux and macOS, and .Net Core on Windows**.
+2. Check `log.txt` if you get something wrong with your AI.
+3. You can refer given samples' source code to learn how to interact with the game program.
+4. Feel free to use any programming language for your AI.
+5. Your program should exit **in `0.5` seconds**. Program will be killed if time limit exceeded.
+6. You may need to `flush` stdout when you have done your output. Search `stdout flush` for more information.
 7. Since the game program only give you the current map, you can store previous maps and operations by files or something else.
+8. Have fun!
 
 ### Other References
 1. https://docs.microsoft.com/en-us/dotnet/core/windows-prerequisites?tabs=netcore21

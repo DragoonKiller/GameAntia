@@ -3,6 +3,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Timers;
 using System.Threading.Tasks;
+using System.Text;
 using static Logger;
 
 
@@ -10,15 +11,18 @@ public static class __Main__
 {
     public static string GetProgramOutput(string command, string input)
     {
-        const double timeout = 0.2f; // in seconds.
-        
         Process proc = new Process();
         try
         {
-            LogLine("cmd : " + command);
+            var arr = command.Split(' ');
+            LogLine("cmd : " + arr[0]);
+            var param = new StringBuilder();
+            for(int i=1; i<arr.Length; i++) param.Append(arr[i] + " ");
+            LogLine("params : " + param.ToString());
             proc.StartInfo = new ProcessStartInfo()
             {
-                FileName = command,
+                FileName = arr[0],
+                Arguments = param.ToString(),
                 UseShellExecute = false,
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
@@ -35,7 +39,7 @@ public static class __Main__
                     proc.Kill();
                 }, 
                 null,
-                new TimeSpan(0, 0, 0, 0, (int)(timeout * 1000)),
+                new TimeSpan(0, 0, 0, 0, Config.inst.timeLimit),
                 new TimeSpan(1));
             
             proc.WaitForExit();
@@ -53,8 +57,7 @@ public static class __Main__
     
     public static void Main(string[] args)
     {
-        Config config = new Config();
-        config.ReadFrom("./config.ini");
+        Config.inst.ReadFrom("./config.ini");
         
         Game game = new Game(args.Length);
         

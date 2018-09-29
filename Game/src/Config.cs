@@ -8,6 +8,8 @@ using static Logger;
 
 public class Config
 {
+    public static Config inst = new Config();
+    
     /// Step delay in ms.
     public int delay;
     
@@ -45,4 +47,6 @@ public class Config
             }
         }
     }
+    
+    private Config() { }
 }

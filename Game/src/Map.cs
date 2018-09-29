@@ -169,7 +169,7 @@ public class Map
     {
         Logger.consoleLock.WaitOne();
         
-        if(hasOutput) Console.SetCursorPosition(0, Console.CursorTop - height - 1);
+        if(hasOutput) Console.SetCursorPosition(0, Console.CursorTop - height - 2 - playerCount);
         
         Console.WriteLine("Round " + round);
         
@@ -199,6 +199,30 @@ public class Map
             Console.ForegroundColor = front;
         }
         
+        // Count players factories , resources and tiles.
+        int[] fac = new int[playerCount + 1];
+        int[] res = new int[playerCount + 1];
+        int[] grd = new int[playerCount + 1];
+        
+        for(int i=0; i<height; i++) for(int j=0; j<width; j++)
+        {
+            if(map[i, j].type == Tile.Type.Factory) fac[map[i, j].owner]++;
+            if(map[i, j].type == Tile.Type.Resource) res[map[i, j].owner]++;
+            grd[map[i, j].owner]++;
+        }
+        
+        Console.WriteLine("Player Tile. Fac. Res.");
+        for(int p = 1; p <= playerCount; p++)
+        {
+            SetColor(playerBackgroundColor[p], playerForegroundColor[p]);
+            Console.Write("  " + p + "  ");
+            SetColor(prevBack, prevFront);
+            Console.WriteLine(string.Format("  {0}  {1}  {2}",
+                grd[p].ToString().PadLeft(4),
+                fac[p].ToString().PadLeft(3),
+                res[p].ToString().PadLeft(3)));
+        }
+        
         for(int i=0; i<map.GetLength(0); i++)
         {
             for(int j=0; j<map.GetLength(1); j++)
@@ -211,7 +235,6 @@ public class Map
                 ConsoleColor front = playerForegroundColor[map[i, j].owner];
                 SetColor(back, front);
                 Console.Write(c);
-                
             }
             SetColor(prevBack, prevFront);
             Console.WriteLine();
