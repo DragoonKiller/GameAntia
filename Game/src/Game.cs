@@ -21,11 +21,7 @@ public class Game
         map = new Map(playerCount, w: 80, h: 40);
         map.Init();
         commands = new List<Command>[map.playerCount + 1];
-        
-        for(int i=1; i <= map.playerCount; i++)
-        {
-            commands[i] = new List<Command>();
-        }
+        for(int i=1; i <= map.playerCount; i++) commands[i] = new List<Command>();
     }
     
     public void TakeOperation(int player, string cmds)
@@ -52,8 +48,7 @@ public class Game
         Command CheckOwned(PosCommand c, int player)
         {
             if(map[c.x, c.y].owner == player) return c;
-            return new InvalidCommand(
-                "{0} : Position {1} {2} is not within your territory!", c, c.x, c.y);
+            return new InvalidCommand("{0} : Position {1} {2} is not within your territory!", c, c.x, c.y);
         }
         
         Command CheckNotOwned(PosCommand c, int player)
@@ -78,7 +73,13 @@ public class Game
         Command CheckObstacle(PosCommand c)
         {
             if(map[c.x, c.y].type != Tile.Type.Obstacle) return c;
-            return new InvalidCommand("{0} : Grid {0} {1} is an obstacle!", c, c.x, c.y);
+            return new InvalidCommand("{0} : Grid {1} {2} is an obstacle!", c, c.x, c.y);
+        }
+        
+        Command CheckBuildable(BuildCommand c)
+        {
+            if(map[c.x, c.y].type == Tile.Type.Normal) return c;
+            return new InvalidCommand("{0} : Grid {1} {2} is not normal grid but you want to build factory on lt!", c, c.x, c.y);
         }
         
         // If command is invalid, change it to InvalidCommand.
@@ -87,13 +88,13 @@ public class Game
             for(int i=0; i<commands[player].Count; i++)
             {
                 var cmds = commands[player];
-                
                 { if(cmds[i] is PosCommand g) cmds[i] = CheckObstacle(g); }
                 { if(cmds[i] is PosCommand g) cmds[i] = CheckOutOfRange(g); }
                 { if(cmds[i] is AttackCommand g) cmds[i] = CheckAdjacentOwned(g, player); }
                 { if(cmds[i] is AttackCommand g) cmds[i] = CheckNotOwned(g, player); }
                 { if(cmds[i] is DefendCommand g) cmds[i] = CheckOwned(g, player); }
                 { if(cmds[i] is BuildCommand g) cmds[i] = CheckOwned(g, player); }
+                { if(cmds[i] is BuildCommand g) cmds[i] = CheckBuildable(g); }
             }
         }
         

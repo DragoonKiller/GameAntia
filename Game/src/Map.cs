@@ -183,7 +183,7 @@ public class Map
         playerBackgroundColor[1] = ConsoleColor.DarkRed;
         playerBackgroundColor[2] = ConsoleColor.DarkYellow;
         playerBackgroundColor[3] = ConsoleColor.DarkGreen;
-        playerBackgroundColor[4] = ConsoleColor.DarkBlue;
+        playerBackgroundColor[4] = ConsoleColor.Blue;
         playerBackgroundColor[5] = ConsoleColor.Gray;
         
         playerForegroundColor[0] = ConsoleColor.DarkGray;
