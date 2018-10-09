@@ -16,6 +16,18 @@ public class Config
     /// Time limit for one operation of player.
     public int timeLimit;
     
+    public int maxRound;
+    
+    public int baseAttack;
+    public int baseDefend;
+    
+    public int attackConsume;
+    public int defendConsume;
+    public int buildConsume;
+    
+    public int maxPlayer;
+    public int mapWidth;
+    public int mapHeight;
     
     /// Read code from config.
     public void ReadFrom(string file)
@@ -29,7 +41,7 @@ public class Config
             var name = g.Groups[1].Value;
             var val = g.Groups[2].Value;
             
-            WriteLine("config : " + name + " = " + val);
+            Log("config : " + name + " = " + val);
             try
             {
                 int p = int.Parse(val);

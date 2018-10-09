@@ -11,14 +11,12 @@ public class Game
 {
     public readonly Map map;
     public int curRound; // only for display purpose.
-    public const int baseAttack = 2;
-    public const int baseDefend = 2;
     
     List<Command>[] commands;
     
     public Game(int playerCount)
     {
-        map = new Map(playerCount, w: 80, h: 40);
+        map = new Map(playerCount, w: Config.inst.mapWidth, h: Config.inst.mapHeight);
         map.Init();
         commands = new List<Command>[map.playerCount + 1];
         for(int i=1; i <= map.playerCount; i++) commands[i] = new List<Command>();
@@ -88,8 +86,8 @@ public class Game
             for(int i=0; i<commands[player].Count; i++)
             {
                 var cmds = commands[player];
-                { if(cmds[i] is PosCommand g) cmds[i] = CheckObstacle(g); }
                 { if(cmds[i] is PosCommand g) cmds[i] = CheckOutOfRange(g); }
+                { if(cmds[i] is PosCommand g) cmds[i] = CheckObstacle(g); }
                 { if(cmds[i] is AttackCommand g) cmds[i] = CheckAdjacentOwned(g, player); }
                 { if(cmds[i] is AttackCommand g) cmds[i] = CheckNotOwned(g, player); }
                 { if(cmds[i] is DefendCommand g) cmds[i] = CheckOwned(g, player); }
@@ -98,15 +96,12 @@ public class Game
             }
         }
         
-        // Output information about invalid commands.
+        // Output information about valid commands.
         for(int player = 1; player <= map.playerCount; player++)
         {
             foreach(var i in commands[player])
             {
-                if(i is InvalidCommand c)
-                {
-                    LogLine(i.ToString());
-                }
+                if(i is InvalidCommand) LogLine(i.ToString());
             }
         }
         
@@ -124,17 +119,19 @@ public class Game
         curRound++;
         LogFmtLine("Round {0} begin.", curRound);
         
+        Ref<int>[] atkPoint = new Ref<int>[map.playerCount + 1];
+        Ref<int>[] defPoint = new Ref<int>[map.playerCount + 1];
+        for(int i=0; i <= map.playerCount; i++) atkPoint[i] = new Ref<int>(Config.inst.baseAttack);
+        for(int i=0; i <= map.playerCount; i++) defPoint[i] = new Ref<int>(Config.inst.baseDefend);
+        
         // Check commands' count.
         for(int player = 1; player <= map.playerCount; player++)
         {
-            Ref<int> atkPoint = new Ref<int>(0);
-            Ref<int> defPoint = new Ref<int>(0);
-            
             map.map.Foreach((i, j, r) =>
             {
                 if(player != r.owner) return r;
-                if(r.type == Tile.Type.Factory) defPoint.v += 1;
-                if(r.type == Tile.Type.Resource) atkPoint.v += 1;
+                if(r.type == Tile.Type.Factory) defPoint[player].v += 1;
+                if(r.type == Tile.Type.Resource) atkPoint[player].v += 1;
                 return r;
             });
             
@@ -152,14 +149,14 @@ public class Game
                 }
             }
             
-            if(atkPoint.v + baseAttack < atkPointReq)
+            if(atkPoint[player] + Config.inst.baseAttack < atkPointReq)
             {
-                LogFmtLine("Attack point not enough! You have {0} but {1} is required.", atkPoint.v + baseAttack, atkPointReq);
+                LogFmtLine("Attack point not enough! You have {0} but {1} is required.", atkPoint[player] + Config.inst.baseAttack, atkPointReq);
             }
             
-            if(defPoint.v + baseDefend < defPointReq)
+            if(defPoint[player] + Config.inst.baseDefend < defPointReq)
             {
-                LogFmtLine("Defence point not enough! You have {0} but {1} is required.", defPoint.v + baseDefend, defPointReq);
+                LogFmtLine("Defence point not enough! You have {0} but {1} is required.", defPoint[player] + Config.inst.baseDefend, defPointReq);
             }
         }
         
@@ -177,7 +174,7 @@ public class Game
         {
             foreach(var i in commands[player])
             {
-                if(i is AttackCommand c)
+                if(atkPoint[player] >= Config.inst.attackConsume && i is AttackCommand c)
                 {
                     atkCount[c.x, c.y]--;
                     if(atkCount[c.x, c.y] <= 0)
@@ -185,11 +182,13 @@ public class Game
                         atkCount[c.x, c.y] *= -1;
                         atkPlayer[c.x, c.y] = player;
                     }
+                    atkPoint[player].v -= Config.inst.attackConsume;
                 }
                 
-                if(i is BuildCommand b)
+                if(atkPoint[player] >= Config.inst.buildConsume && i is BuildCommand b)
                 {
                     map[b.x, b.y].type = Tile.Type.Factory;
+                    atkPoint[player].v -= Config.inst.buildConsume;
                 }
             }
         }
@@ -199,9 +198,10 @@ public class Game
         {
             foreach(var i in commands[player])
             {
-                if(i is DefendCommand d)
+                if(defPoint[player] >= Config.inst.defendConsume && i is DefendCommand d)
                 {
                     atkCount[d.x, d.y] = atkPlayer[d.x, d.y] = 0;
+                    defPoint[player].v -= Config.inst.defendConsume;
                 }
             }
         }

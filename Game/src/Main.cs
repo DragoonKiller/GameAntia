@@ -61,18 +61,14 @@ public static class __Main__
         
         Game game = new Game(args.Length);
         
-        for(int i=1; i<=200; i++)
+        for(int i=1; i<=Config.inst.maxRound; i++)
         {
-            const double time = 1000; // in seconds.
-            var t = new System.Timers.Timer(time);
-            
             int c = 0;
             foreach(var s in args)
             {
                 c++;
-                // WriteLine(string.Format("Player {0}", c));
+                if(c > 5) { throw new InvalidOperationException("This game only supports at most " + Config.inst.maxPlayer + " players!"); }
                 var cmd = GetProgramOutput(s, game.map.OutputString(c));
-                // WriteLine(cmd);
                 game.TakeOperation(c, cmd);
             }
             
