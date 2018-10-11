@@ -3,3 +3,7 @@ bin/
 obj/
 log.txt
 .idea/
+
+# these files are used to perform the final test.
+Test*/
+test.bat

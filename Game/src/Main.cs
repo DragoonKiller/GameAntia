@@ -61,20 +61,27 @@ public static class __Main__
         
         Game game = new Game(args.Length);
         
-        for(int i=1; i<=Config.inst.maxRound; i++)
+        for(int round=1; round<=Config.inst.maxRound; round++)
         {
             int c = 0;
-            foreach(var s in args)
+            
+            string[] cmds = new string[Config.inst.maxPlayer + 1];
+            
+            Parallel.ForEach(args, (s) =>
             {
                 c++;
                 if(c > 5) { throw new InvalidOperationException("This game only supports at most " + Config.inst.maxPlayer + " players!"); }
-                var cmd = GetProgramOutput(s, game.map.OutputString(c));
-                game.TakeOperation(c, cmd);
+                cmds[c] = GetProgramOutput(s, game.map.OutputString(c));
+            });
+            
+            for(int i=1; i <= c; i++)
+            {
+                game.TakeOperation(i, cmds[i]);
             }
             
             game.Roll();
             
-            game.map.OutputConsole(i);
+            game.map.OutputConsole(round);
         }
     }
 }

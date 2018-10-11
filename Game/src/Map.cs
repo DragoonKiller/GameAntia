@@ -53,7 +53,7 @@ public class Map
         {
             map.Foreach((i, j, r) =>
             {
-                const double rate = 1.0 / 5.0; // 1 obstacle per 7 tiles.
+                double rate = 1.0 / Config.inst.gridPerObstacles; // 1 obstacle per 5 tiles.
                 if(rd.NextDouble() < rate) r.type = Tile.Type.Obstacle;
                 return r;
             });
@@ -105,7 +105,7 @@ public class Map
         
         // Generate resources. Remove collected resources.
         {
-            const double rate = 1.0 / 80.0; // one resource site per 80 grids.
+            double rate = 1.0 / Config.inst.gridPerResources;
             for(int i=0; i < vq.Count; i++)
             {
                 if(rd.NextDouble() < rate)

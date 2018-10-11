@@ -29,6 +29,10 @@ public class Config
     public int mapWidth;
     public int mapHeight;
     
+    public int gridPerObstacles;
+    public int gridPerResources;
+    
+    
     /// Read code from config.
     public void ReadFrom(string file)
     {
@@ -41,7 +45,7 @@ public class Config
             var name = g.Groups[1].Value;
             var val = g.Groups[2].Value;
             
-            Log("config : " + name + " = " + val);
+            LogLine("config : " + name + " = " + val);
             try
             {
                 int p = int.Parse(val);
