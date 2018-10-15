@@ -4,6 +4,8 @@ obj/
 log.txt
 .idea/
 
+# submissions are named like this.
+Submit*/
+
 # these files are used to perform the final test.
-Test*/
-test.bat
+*.bat

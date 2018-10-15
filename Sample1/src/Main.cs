@@ -46,7 +46,6 @@ public class Map
 
 public static class __Main__
 {
-    
     public static void Main(string[] args)
     {
         Random rd = new Random((int)DateTime.Now.Ticks);

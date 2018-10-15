@@ -1,0 +1,10 @@
+[package]
+name = "Test1"
+version = "0.1.0"
+authors = ["DragoonKiller <947426443@qq.com>"]
+
+[[bin]]
+name = "Test1"
+path = "./src/x.rs"
+
+[dependencies]
